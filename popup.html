@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <style>
+        body { width: 280px; text-align: center; }
+        h1 { font-size: 2.5rem; }
+        #options-container { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+    </style>
+</head>
+<body class="bg-gray-800 text-white p-4">
+    <div class="flex justify-between items-center mb-2">
+        <h2 id="mode-title" class="text-xl font-bold">Focus Time</h2>
+        <div id="cycle-display" class="text-sm font-bold bg-gray-700 rounded-full px-2 py-1">Cycle: 1/4</div>
+    </div>
+    <h1 id="timer-display" class="font-mono mb-4">25:00</h1>
+    <div class="flex justify-around mb-4">
+        <button id="start-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded w-20">Start</button>
+        <button id="pause-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded w-20">Pause</button>
+        <button id="reset-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded w-20">Reset</button>
+    </div>
+
+    <button id="options-btn" class="text-gray-400 hover:text-white text-sm mb-2">Settings</button>
+    <div id="options-container">
+        <div class="flex justify-between items-center mb-2">
+            <label for="focus-time">Focus (min):</label>
+            <input type="number" id="focus-time" value="25" class="w-16 p-1 rounded bg-gray-700 text-white">
+        </div>
+        <div class="flex justify-between items-center mb-2">
+            <label for="break-time">Break (min):</label>
+            <input type="number" id="break-time" value="5" class="w-16 p-1 rounded bg-gray-700 text-white">
+        </div>
+        <div class="flex justify-between items-center mb-2">
+            <label for="long-break-time">Long Break (min):</label>
+            <input type="number" id="long-break-time" value="15" class="w-16 p-1 rounded bg-gray-700 text-white">
+        </div>
+        <div class="flex justify-between items-center mb-2">
+            <label for="cycles-to-long-break">Cycles for Long Break:</label>
+            <input type="number" id="cycles-to-long-break" value="4" class="w-16 p-1 rounded bg-gray-700 text-white">
+        </div>
+        <button id="save-options-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-sm">Save</button>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
