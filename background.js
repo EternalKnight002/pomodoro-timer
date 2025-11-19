@@ -1,3 +1,4 @@
+// Initialize state from storage
 chrome.storage.local.get([
     "focusTime", "breakTime", "longBreakTime", "cyclesToLongBreak",
     "currentMode", "isRunning", "timeLeft", "currentCycle"
@@ -16,6 +17,7 @@ chrome.storage.local.get([
 
 let timerInterval;
 
+// Listen for messages from the popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.command === "start") startTimer();
     else if (request.command === "pause") pauseTimer();
@@ -42,18 +44,25 @@ function pauseTimer() {
     chrome.storage.local.set({ isRunning: false });
 }
 
+// --- THE FIXED RESET FUNCTION ---
+// This is better than the snippet you found because 
+// it forces you back to "Focus" mode for a true fresh start.
 function resetTimer() {
     pauseTimer();
-    chrome.storage.local.get(["currentMode", "focusTime", "breakTime", "longBreakTime"], (res) => {
-        let newTimeLeft;
-        if (res.currentMode === 'focus') newTimeLeft = res.focusTime * 60;
-        else if (res.currentMode === 'break') newTimeLeft = res.breakTime * 60;
-        else newTimeLeft = res.longBreakTime * 60;
+    chrome.storage.local.get(["focusTime"], (res) => {
+        const initialTime = (res.focusTime || 25) * 60;
         
-        chrome.storage.local.set({ timeLeft: newTimeLeft });
-        updateIcon(newTimeLeft);
+        chrome.storage.local.set({
+            timeLeft: initialTime,
+            currentMode: "focus",  // FORCE Focus Mode (The fix)
+            currentCycle: 1,       // FORCE Cycle 1 (The fix)
+            isRunning: false
+        });
+        
+        updateIcon(initialTime);
     });
 }
+// ---------------------------------
 
 function switchMode() {
     pauseTimer();
@@ -70,7 +79,7 @@ function switchMode() {
                 // Time for a long break
                 newMode = "longBreak";
                 newTimeLeft = res.longBreakTime * 60;
-                newCycle = 1; // Reset cycle count
+                newCycle = 1; // Reset cycle count after a long break
                 notificationTitle = "Time for a long break!";
                 notificationMessage = `Great work! Take a ${res.longBreakTime}-minute rest.`;
             } else {
@@ -84,6 +93,7 @@ function switchMode() {
             // Finished a break (short or long), start next focus session
             newMode = "focus";
             newTimeLeft = res.focusTime * 60;
+            // Increment cycle only if coming from a short break
             if (res.currentMode === "break") newCycle = res.currentCycle + 1;
             notificationTitle = "Break is over!";
             notificationMessage = `Time to start your next ${res.focusTime}-minute focus session!`;
