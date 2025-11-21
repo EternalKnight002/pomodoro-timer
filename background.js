@@ -25,7 +25,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 function startTimer() {
+    stopNotificationSound();
+    
+    // Safety: Clear any existing timer to prevent "double speed" bug
+    if (timerInterval) clearInterval(timerInterval);
+
     chrome.storage.local.set({ isRunning: true });
+    
     timerInterval = setInterval(() => {
         chrome.storage.local.get("timeLeft", (res) => {
             if (res.timeLeft <= 0) {
@@ -40,12 +46,15 @@ function startTimer() {
 }
 
 function pauseTimer() {
-    clearInterval(timerInterval);
+    if (timerInterval) clearInterval(timerInterval);
     chrome.storage.local.set({ isRunning: false });
 }
 
 function resetTimer() {
+    stopNotificationSound();
     pauseTimer();
+    
+    // Fetch the latest 'focusTime' (supports the Save Settings feature)
     chrome.storage.local.get(["focusTime"], (res) => {
         const initialTime = (res.focusTime || 25) * 60;
         
@@ -79,7 +88,6 @@ async function playNotificationSound() {
     }
 
     // Send message to offscreen document to play audio
-    // Make sure 'alarm.mp3' matches your actual file name
     chrome.runtime.sendMessage({ 
         type: 'play-sound', 
         source: 'alarm.mp3' 
@@ -142,3 +150,17 @@ function updateIcon(timeLeft) {
     chrome.action.setBadgeText({ text: `${minutes}` });
     chrome.action.setBadgeBackgroundColor({ color: '#4A90E2' });
 }
+
+// --- HELPERS ---
+
+function stopNotificationSound() {
+    
+    chrome.runtime.sendMessage({ type: 'stop-sound' }, () => {
+        const error = chrome.runtime.lastError;
+    });
+}
+
+// Listen for notification clicks to stop sound
+chrome.notifications.onClicked.addListener(() => {
+    stopNotificationSound();
+});

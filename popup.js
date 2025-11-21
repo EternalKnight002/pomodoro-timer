@@ -23,12 +23,18 @@ optionsBtn.addEventListener("click", () => {
 
 // Save options to chrome.storage
 saveOptionsBtn.addEventListener("click", () => {
+    // 1. Save the new values to storage
     chrome.storage.local.set({
         focusTime: focusTimeInput.value,
         breakTime: breakTimeInput.value,
         longBreakTime: longBreakTimeInput.value,
         cyclesToLongBreak: cyclesToLongBreakInput.value,
+    }, () => {
+        // 2. Callback: Once saved, tell background.js to RESET immediately
+        chrome.runtime.sendMessage({ command: "reset" });
     });
+    
+    // 3. Close the settings menu
     optionsBtn.click();
 });
 
