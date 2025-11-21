@@ -110,14 +110,14 @@ Focus (25min) → Short Break (5min) → Focus → Short Break → Focus → Sho
 
 
 pomodoro-timer/
-├── manifest.json        # Extension configuration & permissions
-├── background.js        # Service worker - timer logic & state management
-├── popup.html           # User interface markup
-├── popup.js             # UI logic & event handlers
-├── offscreen.html       # Hidden document for audio playback
-├── offscreen.js         # Audio playback controller
-├── alarm.mp3            # Notification sound file
-├── icons/               # Extension icons
+├── manifest.json        
+├── background.js        
+├── popup.html           
+├── popup.js             
+├── offscreen.html       
+├── offscreen.js         
+├── alarm.mp3            
+├── icons/               
 │   ├── icon16.png
 │   ├── icon48.png
 │   └── icon128.png
