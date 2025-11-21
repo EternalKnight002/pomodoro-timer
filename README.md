@@ -1,180 +1,261 @@
-# Pomodoro Focus Timer 🍅⏱️
+Pomodoro Focus Timer 🍅⏱️
 
 A lightweight and elegant Chrome extension that implements the Pomodoro Technique to boost your productivity. Stay focused with customizable work sessions, breaks, and helpful notifications.
 
-![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-blue?logo=googlechrome)
-![Manifest V3](https://img.shields.io/badge/Manifest-V3-green)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+✨ Features
 
-## ✨ Features
+Classic Pomodoro Timer: Traditional 25-minute focus sessions with 5-minute breaks
 
-- **Classic Pomodoro Timer**: Traditional 25-minute focus sessions with 5-minute breaks
-- **Customizable Intervals**: Adjust focus time, short breaks, and long breaks to your preference
-- **Long Break System**: Automatically triggers longer breaks after completing a set number of focus cycles
-- **Visual Badge Counter**: See remaining time at a glance on your extension icon
-- **Desktop Notifications**: Get notified when it's time to take a break or start focusing
-- **Persistent State**: Your timer continues running even if you close the popup
-- **Dark Theme UI**: Easy on the eyes with a modern dark interface
-- **Cycle Tracking**: Visual indicator showing your progress through focus cycles
+Sound Alerts: Audio notifications when sessions end (plays even if the popup is closed)
 
-## 🚀 Installation
+Customizable Intervals: Adjust focus time, short breaks, and long breaks to your preference
 
-### Install from Source
+Long Break System: Automatically triggers longer breaks after completing a set number of focus cycles
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/EternalKnight002/pomodoro-timer.git
-   ```
+Visual Badge Counter: See remaining time at a glance on your extension icon
 
-2. Open Chrome and navigate to `chrome://extensions/`
+Desktop Notifications: Get notified when it's time to take a break or start focusing
 
-3. Enable **Developer mode** (toggle in the top-right corner)
+Persistent State: Your timer continues running even if you close the popup
 
-4. Click **Load unpacked** and select the cloned repository folder
+Dark Theme UI: Easy on the eyes with a modern dark interface
 
-5. The Pomodoro Focus Timer icon should now appear in your extensions toolbar!
+Cycle Tracking: Visual indicator showing your progress through focus cycles
 
-## 🎯 How to Use
+🚀 Installation
 
-### Basic Usage
+Install from Source
 
-1. Click the extension icon to open the timer popup
-2. Press **Start** to begin your focus session
-3. Work until the timer completes
-4. Take a break when notified
-5. Repeat!
+Clone this repository:
 
-### Customizing Settings
+git clone [https://github.com/EternalKnight002/pomodoro-timer.git](https://github.com/EternalKnight002/pomodoro-timer.git)
 
-1. Click **Settings** in the popup
-2. Adjust the following parameters:
-   - **Focus Time**: Duration of work sessions (default: 25 minutes)
-   - **Break Time**: Duration of short breaks (default: 5 minutes)
-   - **Long Break Time**: Duration of long breaks (default: 15 minutes)
-   - **Cycles for Long Break**: Number of focus sessions before a long break (default: 4)
-3. Click **Save** to apply your changes
 
-### Controls
+Open Chrome and navigate to chrome://extensions/
 
-- **Start**: Begin or resume the timer
-- **Pause**: Pause the current session
-- **Reset**: Reset the timer to the beginning of the current mode
+Enable Developer mode (toggle in the top-right corner)
 
-## 🏗️ Project Structure
+Click Load unpacked and select the cloned repository folder
 
-```
+The Pomodoro Focus Timer icon should now appear in your extensions toolbar!
+
+🎯 How to Use
+
+Basic Usage
+
+Click the extension icon to open the timer popup
+
+Press Start to begin your focus session
+
+Work until the timer completes and the alarm plays
+
+Take a break when notified
+
+Repeat!
+
+Customizing Settings
+
+Click Settings in the popup
+
+Adjust the following parameters:
+
+Focus Time: Duration of work sessions (default: 25 minutes)
+
+Break Time: Duration of short breaks (default: 5 minutes)
+
+Long Break Time: Duration of long breaks (default: 15 minutes)
+
+Cycles for Long Break: Number of focus sessions before a long break (default: 4)
+
+Click Save to apply your changes (timer will reset to apply new settings)
+
+Controls
+
+Start: Begin or resume the timer (stops alarm if ringing)
+
+Pause: Pause the current session
+
+Reset: Reset the timer to the beginning of the current mode (stops alarm if ringing)
+
+🏗️ Project Structure
+
 pomodoro-timer/
 ├── manifest.json        # Extension configuration
 ├── background.js        # Service worker handling timer logic
-├── popup.html          # Extension popup interface
-├── popup.js            # Popup UI logic and event handlers
+├── popup.html           # Extension popup interface
+├── popup.js             # Popup UI logic and event handlers
+├── offscreen.html       # Hidden document for audio playback
+├── offscreen.js         # Audio playback logic
 └── icons/
-    ├── icon16.png      # 16x16 icon
-    ├── icon48.png      # 48x48 icon
-    └── icon128.png     # 128x128 icon
-```
+    ├── icon16.png       # 16x16 icon
+    ├── icon48.png       # 48x48 icon
+    └── icon128.png      # 128x128 icon
 
-## 🛠️ Technical Details
 
-### Built With
+🛠️ Technical Details
 
-- **Manifest V3**: Latest Chrome extension standard
-- **Vanilla JavaScript**: No frameworks needed, lightweight and fast
-- **Tailwind CSS**: Modern utility-first styling via CDN
-- **Chrome Storage API**: Persistent data storage
-- **Chrome Notifications API**: Desktop notifications
-- **Chrome Alarms API**: Background timer management
+Built With
 
-### Key Components
+Manifest V3: Latest Chrome extension standard
 
-**background.js**
-- Service worker that runs in the background
-- Manages timer state and countdown logic
-- Handles mode switching (focus → break → long break)
-- Sends notifications when sessions complete
-- Updates extension badge with remaining time
+Vanilla JavaScript: No frameworks needed, lightweight and fast
 
-**popup.js**
-- Manages the user interface
-- Handles user interactions (start, pause, reset)
-- Updates display in real-time
-- Manages settings configuration
+Tailwind CSS: Modern utility-first styling via CDN
 
-## 📋 Default Pomodoro Settings
+Chrome Storage API: Persistent data storage
 
-| Setting | Duration |
-|---------|----------|
-| Focus Session | 25 minutes |
-| Short Break | 5 minutes |
-| Long Break | 15 minutes |
-| Cycles to Long Break | 4 |
+Chrome Notifications API: Desktop notifications
 
-## 🎨 Features in Detail
+Chrome Alarms API: Background timer management
 
-### Automatic Mode Switching
+Chrome Offscreen API: DOM access for audio playback
+
+Key Components
+
+background.js
+
+Service worker that runs in the background
+
+Manages timer state and countdown logic
+
+Handles mode switching (focus → break → long break)
+
+orchestrates audio playback via the Offscreen API
+
+offscreen.js
+
+Runs in a hidden HTML document
+
+Handles the Audio object to play MP3 files
+
+Listens for play/stop commands from the background script
+
+popup.js
+
+Manages the user interface
+
+Handles user interactions (start, pause, reset)
+
+Updates display in real-time
+
+Manages settings configuration
+
+📋 Default Pomodoro Settings
+
+Setting
+
+Duration
+
+Focus Session
+
+25 minutes
+
+Short Break
+
+5 minutes
+
+Long Break
+
+15 minutes
+
+Cycles to Long Break
+
+4
+
+🎨 Features in Detail
+
+Automatic Mode Switching
+
 The timer automatically cycles through:
-1. **Focus** → Short Break (after each focus session)
-2. **Short Break** → Focus (cycles 1-3)
-3. **Focus** → Long Break (after 4th focus session)
-4. **Long Break** → Focus (resets cycle count)
 
-### Persistent Timer
+Focus → Short Break (after each focus session)
+
+Short Break → Focus (cycles 1-3)
+
+Focus → Long Break (after 4th focus session)
+
+Long Break → Focus (resets cycle count)
+
+Persistent Timer
+
 Your timer continues running in the background even when:
-- The popup is closed
-- You're browsing other tabs
-- Chrome is minimized
 
-### Visual Feedback
-- Badge counter shows minutes remaining
-- Mode title changes based on current session type
-- Cycle counter displays progress (e.g., "Cycle: 2/4")
+The popup is closed
 
-## 🔒 Permissions
+You're browsing other tabs
+
+Chrome is minimized
+
+Visual Feedback
+
+Badge counter shows minutes remaining
+
+Mode title changes based on current session type
+
+Cycle counter displays progress (e.g., "Cycle: 2/4")
+
+🔒 Permissions
 
 This extension requires the following permissions:
 
-- **storage**: Save your timer settings and state
-- **notifications**: Alert you when sessions complete
-- **alarms**: Manage background timer events
+storage: Save your timer settings and state
 
-## 🤝 Contributing
+notifications: Alert you when sessions complete
+
+alarms: Manage background timer events
+
+offscreen: Create hidden documents to play notification sounds
+
+🤝 Contributing
 
 Contributions are welcome! Here's how you can help:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+Fork the repository
 
-## 💡 Future Enhancements
+Create a feature branch (git checkout -b feature/AmazingFeature)
 
-- [ ] Task list integration
-- [ ] Statistics and productivity tracking
-- [ ] Sound alerts (customizable)
-- [ ] Multiple timer presets
-- [ ] Dark/Light theme toggle
-- [ ] Sync settings across devices
-- [ ] Daily/weekly productivity reports
+Commit your changes (git commit -m 'Add some AmazingFeature')
 
-## 📝 License
+Push to the branch (git push origin feature/AmazingFeature)
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Open a Pull Request
 
-## 👨‍💻 Author
+💡 Future Enhancements
 
-**EternalKnight002**
-- GitHub: [@EternalKnight002](https://github.com/EternalKnight002)
+[ ] Task list integration
 
-## 🙏 Acknowledgments
+[ ] Statistics and productivity tracking
 
-- Inspired by the [Pomodoro Technique](https://en.wikipedia.org/wiki/Pomodoro_Technique) by Francesco Cirillo
-- UI styled with [Tailwind CSS](https://tailwindcss.com/)
+[ ] Sound alerts (customizable)
 
----
+[ ] Multiple timer presets
+
+[ ] Dark/Light theme toggle
+
+[ ] Sync settings across devices
+
+[ ] Daily/weekly productivity reports
+
+📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+👨‍💻 Author
+
+EternalKnight002
+
+GitHub: @EternalKnight002
+
+🙏 Acknowledgments
+
+Notification sound by Universfield from Pixabay
+
+Inspired by the Pomodoro Technique by Francesco Cirillo
+
+UI styled with Tailwind CSS
 
 ⭐ If you find this extension helpful, please consider giving it a star!
 
-## 📞 Support
+📞 Support
 
-If you encounter any issues or have suggestions, please [open an issue](https://github.com/EternalKnight002/pomodoro-timer/issues) on GitHub.
+If you encounter any issues or have suggestions, please open an issue on GitHub.
