@@ -44,9 +44,6 @@ function pauseTimer() {
     chrome.storage.local.set({ isRunning: false });
 }
 
-// --- THE FIXED RESET FUNCTION ---
-// This is better than the snippet you found because 
-// it forces you back to "Focus" mode for a true fresh start.
 function resetTimer() {
     pauseTimer();
     chrome.storage.local.get(["focusTime"], (res) => {
@@ -54,18 +51,48 @@ function resetTimer() {
         
         chrome.storage.local.set({
             timeLeft: initialTime,
-            currentMode: "focus",  // FORCE Focus Mode (The fix)
-            currentCycle: 1,       // FORCE Cycle 1 (The fix)
+            currentMode: "focus",
+            currentCycle: 1,
             isRunning: false
         });
         
         updateIcon(initialTime);
     });
 }
-// ---------------------------------
+
+// --- AUDIO HANDLING ---
+async function playNotificationSound() {
+    const offscreenUrl = chrome.runtime.getURL('offscreen.html');
+    
+    // Check if offscreen document exists
+    const existingContexts = await chrome.runtime.getContexts({
+        contextTypes: ['OFFSCREEN_DOCUMENT'],
+        documentUrls: [offscreenUrl]
+    });
+
+    if (existingContexts.length === 0) {
+        await chrome.offscreen.createDocument({
+            url: 'offscreen.html',
+            reasons: ['AUDIO_PLAYBACK'],
+            justification: 'Notification sound',
+        });
+    }
+
+    // Send message to offscreen document to play audio
+    // Make sure 'alarm.mp3' matches your actual file name
+    chrome.runtime.sendMessage({ 
+        type: 'play-sound', 
+        source: 'alarm.mp3' 
+    });
+}
+// ----------------------
 
 function switchMode() {
     pauseTimer();
+    
+    // Play sound immediately when time is up
+    playNotificationSound();
+
     chrome.storage.local.get([
         "currentMode", "currentCycle", "cyclesToLongBreak",
         "focusTime", "breakTime", "longBreakTime"
@@ -74,26 +101,21 @@ function switchMode() {
         let notificationTitle, notificationMessage;
 
         if (res.currentMode === "focus") {
-            // Finished a focus session
             if (res.currentCycle >= res.cyclesToLongBreak) {
-                // Time for a long break
                 newMode = "longBreak";
                 newTimeLeft = res.longBreakTime * 60;
-                newCycle = 1; // Reset cycle count after a long break
+                newCycle = 1;
                 notificationTitle = "Time for a long break!";
                 notificationMessage = `Great work! Take a ${res.longBreakTime}-minute rest.`;
             } else {
-                // Time for a short break
                 newMode = "break";
                 newTimeLeft = res.breakTime * 60;
                 notificationTitle = "Focus session over!";
                 notificationMessage = `Time for a ${res.breakTime}-minute break.`;
             }
         } else {
-            // Finished a break (short or long), start next focus session
             newMode = "focus";
             newTimeLeft = res.focusTime * 60;
-            // Increment cycle only if coming from a short break
             if (res.currentMode === "break") newCycle = res.currentCycle + 1;
             notificationTitle = "Break is over!";
             notificationMessage = `Time to start your next ${res.focusTime}-minute focus session!`;
