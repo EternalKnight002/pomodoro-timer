@@ -131,7 +131,6 @@ pomodoro-timer/
 
 - *Chrome Extension Manifest V3* - Modern extension architecture
 - *Vanilla JavaScript* - No dependencies, fast and efficient
-- *Tailwind CSS* - Utility-first styling via CDN
 - *Chrome Storage API* - Persistent settings and state
 - *Chrome Notifications API* - System notifications
 - *Chrome Offscreen API* - Reliable audio playback
@@ -237,7 +236,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - 🎵 Notification sound by [Universfield](https://pixabay.com/users/universfield-28281460/) from Pixabay
 - 🍅 Inspired by the [Pomodoro Technique](https://francescocirillo.com/pages/pomodoro-technique) by Francesco Cirillo
-- 🎨 UI styled with [Tailwind CSS](https://tailwindcss.com/)
 
 ## Support
 
